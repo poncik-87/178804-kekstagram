@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Alexey Komarov](https://up.htmlacademy.ru/nodejs/1/user/178804).
-* Наставник: `Неизвестно`.
+* Наставник: `Никита Ткачук`.
 
 ---
 
