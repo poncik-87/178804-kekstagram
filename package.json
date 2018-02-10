@@ -1,0 +1,30 @@
+{
+  "name": "kekstagram",
+  "version": "1.0.0",
+  "description": "Сервер приложения кекстаграм",
+  "main": "index.js",
+  "scripts": {
+    "lint-fix": "eslint . --fix",
+    "test:lint": "eslint .",
+    "test": "npm run test:lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poncik-87/178804-kekstagram.git"
+  },
+  "keywords": [
+    "kekstagram",
+    "node",
+    "server"
+  ],
+  "author": "Alex Komarov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/poncik-87/178804-kekstagram/issues"
+  },
+  "homepage": "https://github.com/poncik-87/178804-kekstagram#readme",
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-htmlacademy": "^0.4.2"
+  }
+}
