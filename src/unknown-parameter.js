@@ -6,6 +6,6 @@ module.exports = {
     console.error(`Неизвестная команда \"${parameter}\".`);
     help.execute();
 
-    return 1;
+    process.exit(1);
   }
 };
