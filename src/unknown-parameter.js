@@ -1,7 +1,7 @@
 const help = require(`./help`);
 
 module.exports = {
-  description: `Shows message for unknown parameter`,
+  description: `Показывает сообщение при неизвестной команде`,
   execute(parameter) {
     console.error(`Неизвестная команда \"${parameter}\".`);
     help.execute();

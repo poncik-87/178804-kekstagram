@@ -1,3 +1,5 @@
+require(`colors`);
+
 const version = require(`./version`);
 const help = require(`./help`);
 const author = require(`./author`);
@@ -8,7 +10,7 @@ const emptyParameters = require(`./empty-parameters`);
 
 module.exports = {
   name: `command-dispatcher`,
-  description: `Dispatch program CLI parameters`,
+  description: `Управляет параметрами интерфейса командной строки`,
   execute(parameters) {
     const commands = [version, help, author, description, license];
 

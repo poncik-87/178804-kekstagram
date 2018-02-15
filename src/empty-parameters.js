@@ -1,7 +1,7 @@
 const packageInfo = require(`../package.json`);
 
 module.exports = {
-  description: `Shows message for empty parameter`,
+  description: `Показывает сообщение при пустых параметрах`,
   execute() {
     console.log(
         `Привет!\n` +
