@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lint-fix": "eslint . --fix",
+    "test:mocha": "mocha",
     "test:lint": "eslint .",
-    "test": "npm run test:lint"
+    "test": "npm run test:lint && npm run test:mocha"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,8 @@
   "homepage": "https://github.com/poncik-87/178804-kekstagram#readme",
   "devDependencies": {
     "eslint": "^4.17.0",
-    "eslint-config-htmlacademy": "^0.4.2"
+    "eslint-config-htmlacademy": "^0.4.2",
+    "mocha": "^5.0.1"
   },
   "dependencies": {
     "colors": "^1.1.2"
