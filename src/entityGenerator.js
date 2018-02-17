@@ -25,10 +25,10 @@ const getRandomArrayElemet = (array) => {
 
 // Функция возвращает случайный набор хештегов
 const getRandomHashtags = () => {
-  let hashtags = new Set();
-  do {
+  const hashtags = new Set();
+  while (hashtags.size < Math.random() * MAX_HASHTAG_COUNT) {
     hashtags.add(getRandomArrayElemet(HASHTAG_BANK));
-  } while (hashtags.size < Math.random() * MAX_HASHTAG_COUNT);
+  }
 
   return Array.from(hashtags);
 };
@@ -36,7 +36,7 @@ const getRandomHashtags = () => {
 // Функция возвращает строку, состоящую из случайных букв английского алфавита и цифр
 const getRandomString = (length) => {
   let randomString = ``;
-  const pieceLength = length > 10 ? 10 : length;
+  const pieceLength = Math.max(length, 10);
   const pieceCount = Math.ceil(length / pieceLength);
 
   for (let i = 0; i < pieceCount; i++) {
@@ -48,7 +48,7 @@ const getRandomString = (length) => {
 
 // Функция возвращает массив со строками из случайных букв/цифр
 const getRandomStrings = (count, maxStringLength) => {
-  let randomStrings = [];
+  const randomStrings = [];
   for (let i = 0; i < count; i++) {
     randomStrings.push(getRandomString(getRandomNumber(maxStringLength)));
   }

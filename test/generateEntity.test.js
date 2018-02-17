@@ -11,16 +11,6 @@ const hasOnlyType = (array, type) =>
 const hasOnlyLimitedStrings = (array, length) =>
   !array.some((arrayItem) => arrayItem.length > length);
 
-// Функция проверяет, что generateEntity генерирует уникальные простые значения
-const isGeneratesUniqueSimpleValue = (field) => {
-  let set = new Set();
-  for (let i = 0, testIterations = 5; i < testIterations; i++) {
-    set.add(generateEntity()[field]);
-  }
-
-  return set.size !== 1;
-};
-
 describe(`Check generateEntity`, () => {
   describe(`Check module contains function`, () => {
     it(`Should contains generateEntity function`, () => {
@@ -58,10 +48,6 @@ describe(`Check generateEntity`, () => {
     it(`Should be integer`, () => {
       assert.ok(Number.isInteger(entity.scale));
     });
-
-    it(`Should be random`, () => {
-      assert.ok(isGeneratesUniqueSimpleValue(`scale`));
-    });
   });
 
   describe(`Check effect field`, () => {
@@ -74,10 +60,6 @@ describe(`Check generateEntity`, () => {
     it(`Should be one of: 'none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'`, () => {
       const effects = [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`];
       assert.ok(effects.includes(entity.effect));
-    });
-
-    it(`Should be random`, () => {
-      assert.ok(isGeneratesUniqueSimpleValue(`effect`));
     });
   });
 
@@ -131,7 +113,8 @@ describe(`Check generateEntity`, () => {
     });
 
     it(`Should be random`, () => {
-      assert.ok(isGeneratesUniqueSimpleValue(`description`));
+      const otherEntity = generateEntity();
+      assert.notEqual(entity.description, otherEntity.description);
     });
   });
 
@@ -148,10 +131,6 @@ describe(`Check generateEntity`, () => {
 
     it(`Should be integer`, () => {
       assert.ok(Number.isInteger(entity.likes));
-    });
-
-    it(`Should be random`, () => {
-      assert.ok(isGeneratesUniqueSimpleValue(`likes`));
     });
   });
 
