@@ -1,12 +1,8 @@
-const packageInfo = require(`../package.json`);
+const entityGeneratorQuestioning = require(`./entity-generator-questioning`);
 
 module.exports = {
   description: `Показывает сообщение при пустых параметрах`,
   execute() {
-    console.log(
-        `Привет!\n` +
-        `Эта программа будет запускать сервер кекстаграма\n` +
-        `Автор: ${packageInfo.author}`
-    );
+    entityGeneratorQuestioning.execute();
   }
 };
