@@ -17,29 +17,16 @@ const QUESTION_TYPE = {
 
 // Возвращает вопрос к пользователю
 const getQuestion = (type) => {
-  let question = ``;
-  switch (type) {
-    case QUESTION_TYPE.agreement:
-      question = `Приветствую!\nХотите сгенерировать данные приложения?(Yes/No)`;
-      break;
-    case QUESTION_TYPE.elementsCount:
-      question = `Введите количество элементов данных`;
-      break;
-    case QUESTION_TYPE.elementsCountError:
-      question = `Некорректно введенное число`;
-      break;
-    case QUESTION_TYPE.filePath:
-      question = `Введите путь с именем генерируемого файла`;
-      break;
-    case QUESTION_TYPE.anotherFilePath:
-      question = `Введите другой путь с именем генерируемого файла`;
-      break;
-    case QUESTION_TYPE.rewrite:
-      question = `Файл с таким именем уже существует, хотите переписать его?(Yes/No)`;
-      break;
-  }
+  const questions = {
+    [QUESTION_TYPE.agreement]: `Приветствую!\nХотите сгенерировать данные приложения?(Yes/No)`,
+    [QUESTION_TYPE.elementsCount]: `Введите количество элементов данных`,
+    [QUESTION_TYPE.elementsCountError]: `Некорректно введенное число`,
+    [QUESTION_TYPE.filePath]: `Введите путь с именем генерируемого файла`,
+    [QUESTION_TYPE.anotherFilePath]: `Введите другой путь с именем генерируемого файла`,
+    [QUESTION_TYPE.rewrite]: `Файл с таким именем уже существует, хотите переписать его?(Yes/No)`
+  };
 
-  return question;
+  return questions[type];
 };
 
 // Обработка ответа "Да/Нет"
@@ -133,21 +120,15 @@ module.exports = {
       });
     };
 
+    const actions = {
+      [QUESTION_TYPE.agreement]: processAgreement,
+      [QUESTION_TYPE.elementsCount]: processElementsCount,
+      [QUESTION_TYPE.filePath]: processFilePath,
+      [QUESTION_TYPE.rewrite]: processRewrite
+    };
+
     rl.on(`line`, (answer) => {
-      switch (questionType) {
-        case QUESTION_TYPE.agreement:
-          processAgreement(answer);
-          break;
-        case QUESTION_TYPE.elementsCount:
-          processElementsCount(answer);
-          break;
-        case QUESTION_TYPE.filePath:
-          processFilePath(answer);
-          break;
-        case QUESTION_TYPE.rewrite:
-          processRewrite(answer);
-          break;
-      }
+      actions[questionType](answer);
     });
 
     questionType = QUESTION_TYPE.agreement;
