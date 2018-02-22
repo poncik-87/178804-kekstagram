@@ -2,6 +2,7 @@ const version = require(`./version`);
 const author = require(`./author`);
 const description = require(`./description`);
 const license = require(`./license`);
+const server = require(`./server`);
 
 const HELP_MODULE_NAME = `--help`;
 const HELP_MODULE_DESCRIPTION = `Показывает справку по программе`;
@@ -13,7 +14,7 @@ module.exports = {
   name: HELP_MODULE_NAME,
   description: HELP_MODULE_DESCRIPTION,
   execute() {
-    const commands = [version, author, description, license];
+    const commands = [server, version, author, description, license];
     let message = `Доступные команды:\n`;
     commands.forEach((command) => {
       message += getHelpMessageLine(command.name, command.description) + `\n`;

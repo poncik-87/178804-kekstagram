@@ -7,12 +7,13 @@ const description = require(`./description`);
 const license = require(`./license`);
 const unknownParameter = require(`./unknown-parameter`);
 const emptyParameters = require(`./empty-parameters`);
+const server = require(`./server`);
 
 module.exports = {
   name: `command-dispatcher`,
   description: `Управляет параметрами интерфейса командной строки`,
   execute(parameters) {
-    const commands = [version, help, author, description, license];
+    const commands = [server, version, help, author, description, license];
 
     if (parameters.length === 0) {
       emptyParameters.execute();
