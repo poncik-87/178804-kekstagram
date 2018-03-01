@@ -12,6 +12,7 @@ const MAX_DESCRIPTION_LENGTH = 140;
 const MAX_LIKES = 1000;
 const MAX_COMMENTS_COUNT = 10;
 const MAX_COMMENT_LENGTH = 140;
+const DATE_RANGE = 7;
 
 // Функция возвращает случайное целое число
 const getRandomNumber = (maxValue) =>
@@ -55,6 +56,13 @@ const getRandomStrings = (count, maxStringLength) => {
   return randomStrings;
 };
 
+// Функция возвращает дату, меньшую текущей на определенное количество дней
+const getDateBefore = (days) => {
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return date;
+};
+
 module.exports = {
   name: `entityGenerator`,
   description: `Генерирует тестовые данные`,
@@ -65,7 +73,8 @@ module.exports = {
     "hashtags": getRandomHashtags(),
     "description": getRandomString(getRandomNumber(MAX_DESCRIPTION_LENGTH)),
     "likes": getRandomNumber(MAX_LIKES),
-    "comments": getRandomStrings(getRandomNumber(MAX_COMMENTS_COUNT), MAX_COMMENT_LENGTH)
+    "comments": getRandomStrings(getRandomNumber(MAX_COMMENTS_COUNT), MAX_COMMENT_LENGTH),
+    "date": getDateBefore(getRandomNumber(DATE_RANGE) - 1).getTime()
   }),
   consts: {MAX_HASHTAG_COUNT, MAX_SCALE, MAX_DESCRIPTION_LENGTH, MAX_LIKES, MAX_COMMENT_LENGTH}
 };

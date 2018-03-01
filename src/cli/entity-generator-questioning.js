@@ -2,7 +2,7 @@ const readline = require(`readline`);
 const fs = require(`fs`);
 const promisify = require(`util`).promisify;
 
-const generateEntity = require(`./entity-generator`).generateEntity;
+const {generateEntity} = require(`../entity-generator`);
 
 const writeFilePromise = promisify(fs.writeFile);
 

@@ -2,7 +2,7 @@ const assert = require(`assert`);
 const promisify = require(`util`).promisify;
 const fs = require(`fs`);
 
-const generateDataToFile = require(`../src/entity-generator-questioning`).generateDataToFile;
+const {generateDataToFile} = require(`../src/cli/entity-generator-questioning`);
 
 const readFilePromise = promisify(fs.readFile);
 const unlinkPromise = promisify(fs.unlink);
