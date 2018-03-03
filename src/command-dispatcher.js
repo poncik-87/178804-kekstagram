@@ -1,13 +1,13 @@
 require(`colors`);
 
-const version = require(`./version`);
-const help = require(`./help`);
-const author = require(`./author`);
-const description = require(`./description`);
-const license = require(`./license`);
-const unknownParameter = require(`./unknown-parameter`);
-const emptyParameters = require(`./empty-parameters`);
-const server = require(`./server`);
+const version = require(`./cli/version`);
+const help = require(`./cli/help`);
+const author = require(`./cli/author`);
+const description = require(`./cli/description`);
+const license = require(`./cli/license`);
+const unknownParameter = require(`./cli/unknown-parameter`);
+const emptyParameters = require(`./cli/empty-parameters`);
+const server = require(`./cli/server`);
 
 module.exports = {
   name: `command-dispatcher`,
