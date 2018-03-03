@@ -53,17 +53,17 @@ describe(`post api/posts`, () => {
   it(`should consume JSON`, () => {
     const post = generateEntity();
 
-    return request(app).post(`/api/posts`).
-        send(post).
-        expect(200, post);
+    return request(app).post(`/api/posts`)
+        .send(post)
+        .expect(200, post);
   });
 
   it(`should consume multiform`, () => {
-    return request(app).post(`/api/posts`).
-        field(`url`, `funny-cat.png`).
-        field(`scale`, `100`).
-        field(`description`, `best cat`).
-        expect(200, {
+    return request(app).post(`/api/posts`)
+        .field(`url`, `funny-cat.png`)
+        .field(`scale`, `100`)
+        .field(`description`, `best cat`)
+        .expect(200, {
           url: `funny-cat.png`,
           scale: `100`,
           description: `best cat`
