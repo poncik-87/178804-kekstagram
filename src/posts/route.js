@@ -3,6 +3,8 @@ const multer = require(`multer`);
 const bodyParser = require(`body-parser`);
 
 const {generateEntity} = require(`../entity-generator`);
+const {postsValidationSchema} = require(`./validationSchema`);
+const {validate} = require(`../validation`);
 
 // генерирует данные сервера о постах
 const generateEntities = (elementsCount) => {
@@ -37,9 +39,14 @@ postsRouter.get(`/:date`, (req, res) => {
 });
 
 // обработка post запроса с данными поста
-postsRouter.post(`/`, bodyParser.json(), upload.single(`photo`), (req, res) => {
+postsRouter.post(`/`, bodyParser.json(), upload.single(`filename`), (req, res) => {
   const postData = Object.assign({}, req.body);
-  res.send(postData);
+  postData.filename = req.file || postData.filename;
+  validate(postData, postsValidationSchema);
+  res.send(req.body);
+}, (err, req, res, next) => {
+  res.status(400).send(err);
+  next();
 });
 
 module.exports = {
