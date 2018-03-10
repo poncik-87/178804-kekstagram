@@ -1,16 +1,23 @@
 const {MongoClient} = require(`mongodb`);
 
-const url = `mongodb://localhost:27017`;
+const {logger} = require(`./logger`);
+
+const dbHost = process.env.DB_HOST || `localhost:27017`;
+const url = `mongodb://${dbHost}`;
 
 let dbClient;
 
 const database = MongoClient.connect(url)
     .then((client) => {
       dbClient = client;
-      return client.db(`kekstagram`);
+      const db = client.db(`kekstagram`);
+
+      logger.info(`db started at ${url}`);
+
+      return db;
     })
     .catch((err) => {
-      console.error(`Failed to connect to mongoDB`, err);
+      logger.error(`Failed to connect to db`, {error: err});
       process.exit(1);
     });
 

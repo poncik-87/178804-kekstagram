@@ -8,10 +8,17 @@ const {getPaginatedData} = require(`../utils`);
 const {NotFoundError} = require(`../errors`);
 const {bufferToStream} = require(`../utils`);
 const {HTTP_STATUS_CODES} = require(`../consts`);
+const {logger} = require(`../logger`);
 
 const upload = multer({storage: multer.memoryStorage()});
 
 const postsRouter = new Router();
+
+postsRouter.use((req, res, next) => {
+  res.header(`Access-Control-Allow-Origin`, `*`);
+  res.header(`Access-Control-Allow-Headers`, `Origin, X-Requested-With, Content-Type, Accept`);
+  next();
+});
 
 // возвращает посты по параметрам пагинации
 postsRouter.get(`/`, async (req, res, next) => {
@@ -23,8 +30,11 @@ postsRouter.get(`/`, async (req, res, next) => {
         req.query.limit && Number(req.query.limit)
     );
 
+    logger.info(`successfully process GET posts`);
+
     res.send(data);
   } catch (err) {
+    err.request = `GET posts/`;
     next(err);
   }
 });
@@ -39,8 +49,11 @@ postsRouter.get(`/:date`, async (req, res, next) => {
       throw new NotFoundError(`Post with date ${date} not found`);
     }
 
+    logger.info(`successfully process GET post by date`);
+
     res.send(post);
   } catch (err) {
+    err.request = `GET posts/:date`;
     next(err);
   }
 });
@@ -55,8 +68,11 @@ postsRouter.get(`/:date/image`, async (req, res, next) => {
       throw new NotFoundError(`Post with date ${new Date(req.params.date)} not found`);
     }
 
+    logger.info(`successfully process GET post image`);
+
     fileStream.pipe(res);
   } catch (err) {
+    err.request = `GET posts/:date/image`;
     next(err);
   }
 });
@@ -76,16 +92,23 @@ postsRouter.post(`/`, bodyParser.json(), upload.single(`filename`), async (req, 
     const postData = Object.assign({}, req.body, {date, url, likes: 0});
     await postsRouter.postsStore.savePost(postData);
 
+    logger.info(`successfully process POST post`);
+
     res.send(postData);
   } catch (err) {
+    err.request = `POST posts/`;
     next(err);
   }
 });
 
 postsRouter.use((err, req, res, next) => {
   if (err.code) {
+    logger.info(`successfully process wrong ${err.request} request`, {error: err});
+
     res.status(err.code).send(err.message);
   } else {
+    logger.error(`failed to process ${err.request} request`, {error: err});
+
     res.status(HTTP_STATUS_CODES.SERVER_ERROR).send(`server has some troubles`);
   }
 

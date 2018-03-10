@@ -98,14 +98,13 @@ const getPaginatedData = async (cursor, skip = 0, limit = 50) => {
 
 // проверяет удовлетворяет ли объект фильтру
 const hasFilterValues = (obj, filter) => {
-  let ret = true;
   for (let field in filter) {
-    if (!obj[field] || obj[field] !== filter[field]) {
-      ret = false;
-      break;
+    if (obj[field] !== filter[field]) {
+      return false;
     }
   }
-  return ret;
+
+  return true;
 };
 
 module.exports = {
