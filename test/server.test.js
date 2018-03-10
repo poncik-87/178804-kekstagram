@@ -4,6 +4,7 @@ const express = require(`express`);
 
 const {getPostsRouter} = require(`../src/posts/route`);
 const {mocPostsStore, mocImageStore} = require(`./mock-store`);
+const {HTTP_STATUS_CODES} = require(`../src/consts`);
 
 const isValidPost = (post) => {
   return ![`url`, `scale`, `effect`, `hashtags`, `description`, `likes`, `comments`, `date`]
@@ -21,7 +22,7 @@ describe(`get api/posts?skip=0&limit=5`, () => {
   it(`should return paginated posts`, () => {
     request(app)
         .get(`/api/posts`)
-        .expect(200)
+        .expect(HTTP_STATUS_CODES.OK)
         .expect(`Content-Type`, /json/)
         .end((err, res) => {
           if (err) {
@@ -41,7 +42,7 @@ describe(`get api/posts/:date`, () => {
     const date = new Date();
     request(app)
         .get(`/api/posts/${date.getTime()}`)
-        .expect(200)
+        .expect(HTTP_STATUS_CODES.OK)
         .expect(`Content-Type`, /json/)
         .end((err, res) => {
           if (err) {
@@ -70,7 +71,7 @@ describe(`post api/posts`, () => {
 
     return request(app).post(path)
         .send(post)
-        .expect(200);
+        .expect(HTTP_STATUS_CODES.OK);
   });
 
   it(`should consume multiform`, () => {
@@ -79,12 +80,12 @@ describe(`post api/posts`, () => {
         .field(`effect`, `none`)
         .field(`description`, `best cat`)
         .attach(`filename`, `test/fixtures/1.jpg`)
-        .expect(200);
+        .expect(HTTP_STATUS_CODES.OK);
   });
 
-  it(`should return 400 on invalid data`, () => {
+  it(`should return ${HTTP_STATUS_CODES.VALIDATION_ERROR} on invalid data`, () => {
     return request(app).post(path)
         .send({})
-        .expect(400);
+        .expect(HTTP_STATUS_CODES.VALIDATION_ERROR);
   });
 });

@@ -1,20 +1,12 @@
 const {Duplex} = require(`stream`);
 
+const {POST_LIMITATION} = require(`./consts`);
+
 const HASHTAG_BANK = [`#красавица`, `#секси`, `#самаялучшая`, `#лучшенет`, `#бомба`, `#творческаяличность`,
   `#шикарная`, `#шикарнаяженщина`, `#другойтакойнет`, `#такуюжененайдешь`, `#личность`, `#богатыйвнутрениймир`,
   `#vip`, `#vipперсона`, `#vipотдых`, `#высшееобщество`, `#небыдло`, `#дорогобогато`, `#многоденег`, `#оченьдорого`,
   `#альфасамец`, `#самыйстильный`, `#горамускулов`, `#каждыйденьвкачалке`, `#опытный`, `#уменямногобаб`, `#популярный`,
   `#катаюсьнапорше`, `#катаюсьнабмв`, `#моидрузьянагелике`, `#опасный`, `#бандит`];
-
-const EFFECTS = [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`];
-
-const MAX_HASHTAG_COUNT = 5;
-const MAX_SCALE = 100;
-const MAX_DESCRIPTION_LENGTH = 140;
-const MAX_LIKES = 1000;
-const MAX_COMMENTS_COUNT = 10;
-const MAX_COMMENT_LENGTH = 140;
-const DATE_RANGE = 7;
 
 // Функция возвращает случайное целое число
 const getRandomNumber = (maxValue) =>
@@ -29,7 +21,7 @@ const getRandomArrayElemet = (array) => {
 // Функция возвращает случайный набор хештегов
 const getRandomHashtags = () => {
   const hashtags = new Set();
-  while (hashtags.size < Math.random() * MAX_HASHTAG_COUNT) {
+  while (hashtags.size < Math.random() * POST_LIMITATION.MAX_HASHTAG_COUNT) {
     hashtags.add(getRandomArrayElemet(HASHTAG_BANK));
   }
 
@@ -68,18 +60,18 @@ const getDateBefore = (days) => {
 // генерация данных поста
 const generateEntity = () => ({
   "url": `https://picsum.photos/600/?random`,
-  "scale": getRandomNumber(MAX_SCALE),
-  "effect": getRandomArrayElemet(EFFECTS),
+  "scale": getRandomNumber(POST_LIMITATION.MAX_SCALE),
+  "effect": getRandomArrayElemet(POST_LIMITATION.EFFECTS),
   "hashtags": getRandomHashtags(),
-  "description": getRandomString(getRandomNumber(MAX_DESCRIPTION_LENGTH)),
-  "likes": getRandomNumber(MAX_LIKES),
-  "comments": getRandomStrings(getRandomNumber(MAX_COMMENTS_COUNT), MAX_COMMENT_LENGTH),
-  "date": getDateBefore(getRandomNumber(DATE_RANGE) - 1).getTime()
+  "description": getRandomString(getRandomNumber(POST_LIMITATION.MAX_DESCRIPTION_LENGTH)),
+  "likes": getRandomNumber(POST_LIMITATION.MAX_LIKES),
+  "comments": getRandomStrings(getRandomNumber(POST_LIMITATION.MAX_COMMENTS_COUNT), POST_LIMITATION.MAX_COMMENT_LENGTH),
+  "date": getDateBefore(getRandomNumber(POST_LIMITATION.DATE_RANGE) - 1).getTime()
 });
 
 // генерации данных нескольких постов
 const generateEntities = (count) => {
-  let data = [];
+  const data = [];
   for (let i = 0; i < count; i++) {
     data.push(generateEntity());
   }
@@ -121,7 +113,6 @@ module.exports = {
   description: `функции утилиты`,
   generateEntity,
   generateEntities,
-  consts: {MAX_HASHTAG_COUNT, MAX_SCALE, MAX_DESCRIPTION_LENGTH, MAX_LIKES, MAX_COMMENT_LENGTH},
   bufferToStream,
   getPaginatedData,
   hasFilterValues

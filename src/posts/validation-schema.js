@@ -1,3 +1,5 @@
+const {POST_LIMITATION} = require(`../consts`);
+
 const postsValidationSchema = {
   filename: {
     isRequired: true,
@@ -18,9 +20,9 @@ const postsValidationSchema = {
       {
         rule: (scale) => {
           const scaleNum = Number(scale);
-          return scaleNum >= 0 && scaleNum <= 100;
+          return scaleNum >= POST_LIMITATION.MIN_SCALE && scaleNum <= POST_LIMITATION.MAX_SCALE;
         },
-        errorMessage: `scale should be >= 0 and <= 100`
+        errorMessage: `scale should be >= ${POST_LIMITATION.MIN_SCALE} and <= ${POST_LIMITATION.MAX_SCALE}`
       }
     ]
   },
@@ -29,8 +31,8 @@ const postsValidationSchema = {
     rules: [
       {
         rule: (effect) =>
-          [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`].includes(effect),
-        errorMessage: `effect should be one of: none, chrome, sepia, marvin, phobos, heat`
+          POST_LIMITATION.EFFECTS.includes(effect),
+        errorMessage: `effect should be one of: ${POST_LIMITATION.EFFECTS.join(`, `)}`
       }
     ]
   },
@@ -38,8 +40,8 @@ const postsValidationSchema = {
     isRequired: false,
     rules: [
       {
-        rule: (hashtags) => hashtags.split(` `).length <= 5,
-        errorMessage: `should be <= 5 hashtags`
+        rule: (hashtags) => hashtags.split(` `).length <= POST_LIMITATION.MAX_HASHTAG_COUNT,
+        errorMessage: `should be <= ${POST_LIMITATION.MAX_HASHTAG_COUNT} hashtags`
       },
       {
         rule: (hashtags) => !hashtags.split(` `).some((hashtag) =>
@@ -48,8 +50,8 @@ const postsValidationSchema = {
       },
       {
         rule: (hashtags) => !hashtags.split(` `).some((hashtag) =>
-          hashtag.length < 1 || hashtag.length > 20),
-        errorMessage: `hashtag length should be > 0 and <= 20`
+          hashtag.length < 1 || hashtag.length > POST_LIMITATION.MAX_HASHTAG_LENGTH),
+        errorMessage: `hashtag length should be > 0 and <= ${POST_LIMITATION.MAX_HASHTAG_LENGTH}`
       },
       {
         rule: (hashtags) => {
@@ -66,8 +68,8 @@ const postsValidationSchema = {
     isRequired: false,
     rules: [
       {
-        rule: (description) => description.length < 140,
-        errorMessage: `description length should be < 140`
+        rule: (description) => description.length < POST_LIMITATION.MAX_DESCRIPTION_LENGTH,
+        errorMessage: `description length should be < ${POST_LIMITATION.MAX_DESCRIPTION_LENGTH}`
       }
     ]
   },

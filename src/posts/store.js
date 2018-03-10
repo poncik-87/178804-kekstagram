@@ -1,7 +1,22 @@
 const {database} = require(`../database`);
 
 class PostsStore {
-  async getCollection() {
+  async getPosts() {
+    const collection = await this._getCollection();
+    return collection.find();
+  }
+
+  async getPost(filter) {
+    const collection = await this._getCollection();
+    return collection.findOne(filter);
+  }
+
+  async savePost(post) {
+    const collection = await this._getCollection();
+    return collection.insertOne(post);
+  }
+
+  async _getCollection() {
     if (this._postsCollection) {
       return this._postsCollection;
     }
@@ -10,21 +25,6 @@ class PostsStore {
     this._postsCollection = db.collection(`posts`);
 
     return this._postsCollection;
-  }
-
-  async getPosts() {
-    const collection = await this.getCollection();
-    return collection.find();
-  }
-
-  async getPost(filter) {
-    const collection = await this.getCollection();
-    return collection.findOne(filter);
-  }
-
-  async savePost(post) {
-    const collection = await this.getCollection();
-    return collection.insertOne(post);
   }
 }
 

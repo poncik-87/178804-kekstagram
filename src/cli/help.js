@@ -10,11 +10,12 @@ const HELP_MODULE_DESCRIPTION = `Показывает справку по про
 const getHelpMessageLine = (name, desc) =>
   `${name.gray}    - ${desc.green}`;
 
+const commands = [server, version, author, description, license];
+
 module.exports = {
   name: HELP_MODULE_NAME,
   description: HELP_MODULE_DESCRIPTION,
   execute() {
-    const commands = [server, version, author, description, license];
     let message = `Доступные команды:\n`;
     commands.forEach((command) => {
       message += getHelpMessageLine(command.name, command.description) + `\n`;

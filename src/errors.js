@@ -1,7 +1,9 @@
+const {HTTP_STATUS_CODES} = require(`./consts`);
+
 class NotFoundError extends Error {
   constructor(errorMessage) {
     super();
-    this.code = 404;
+    this.code = HTTP_STATUS_CODES.NOT_FOUND_ERROR;
     this.message = errorMessage;
   }
 }
@@ -9,7 +11,7 @@ class NotFoundError extends Error {
 class ValidationError extends Error {
   constructor(errorMessage) {
     super();
-    this.code = 400;
+    this.code = HTTP_STATUS_CODES.VALIDATION_ERROR;
     this.message = errorMessage;
   }
 }

@@ -2,26 +2,31 @@ const {Router} = require(`express`);
 const multer = require(`multer`);
 const bodyParser = require(`body-parser`);
 
-const {postsValidationSchema} = require(`./validationSchema`);
+const {postsValidationSchema} = require(`./validation-schema`);
 const {validate} = require(`../validation`);
 const {getPaginatedData} = require(`../utils`);
 const {NotFoundError} = require(`../errors`);
 const {bufferToStream} = require(`../utils`);
+const {HTTP_STATUS_CODES} = require(`../consts`);
 
 const upload = multer({storage: multer.memoryStorage()});
 
 const postsRouter = new Router();
 
 // возвращает посты по параметрам пагинации
-postsRouter.get(`/`, async (req, res) => {
-  const posts = await postsRouter.postsStore.getPosts();
-  const data = await getPaginatedData(
-      posts,
-      req.query.skip && Number(req.query.skip),
-      req.query.limit && Number(req.query.limit)
-  );
+postsRouter.get(`/`, async (req, res, next) => {
+  try {
+    const posts = await postsRouter.postsStore.getPosts();
+    const data = await getPaginatedData(
+        posts,
+        req.query.skip && Number(req.query.skip),
+        req.query.limit && Number(req.query.limit)
+    );
 
-  res.send(data);
+    res.send(data);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // возвращает пост по дате
@@ -81,7 +86,7 @@ postsRouter.use((err, req, res, next) => {
   if (err.code) {
     res.status(err.code).send(err.message);
   } else {
-    res.status(500).send(`server has some troubles`);
+    res.status(HTTP_STATUS_CODES.SERVER_ERROR).send(`server has some troubles`);
   }
 
   next();

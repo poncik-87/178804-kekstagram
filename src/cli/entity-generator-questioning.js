@@ -30,14 +30,14 @@ const getQuestion = (type) => {
 };
 
 // Обработка ответа "Да/Нет"
-const processYesNoResponse = (answer, yesCallback, noCallback, otherCallback) => {
+const processYesNoResponse = (answer, onYes, onNo, onOther) => {
   answer = answer.toLowerCase();
   if (answer === `y` || answer === `yes`) {
-    yesCallback();
+    onYes();
   } else if (answer === `n` || answer === `no`) {
-    noCallback();
+    onNo();
   } else {
-    otherCallback();
+    onOther();
   }
 };
 
