@@ -3,6 +3,7 @@ const fs = require(`fs`);
 const promisify = require(`util`).promisify;
 
 const {generateEntities} = require(`../utils`);
+const {logger} = require(`../logger`);
 
 const writeFilePromise = promisify(fs.writeFile);
 
@@ -48,7 +49,7 @@ const generateDataToFile = async (elementsCount, filePath) => {
   try {
     await writeFilePromise(filePath, JSON.stringify(data));
   } catch (err) {
-    console.error(err);
+    logger.error(`generateDataToFile fail to write to file`, {error: err});
   }
 };
 
