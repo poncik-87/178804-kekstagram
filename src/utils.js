@@ -1,3 +1,5 @@
+const {Duplex} = require(`stream`);
+
 const HASHTAG_BANK = [`#красавица`, `#секси`, `#самаялучшая`, `#лучшенет`, `#бомба`, `#творческаяличность`,
   `#шикарная`, `#шикарнаяженщина`, `#другойтакойнет`, `#такуюжененайдешь`, `#личность`, `#богатыйвнутрениймир`,
   `#vip`, `#vipперсона`, `#vipотдых`, `#высшееобщество`, `#небыдло`, `#дорогобогато`, `#многоденег`, `#оченьдорого`,
@@ -63,18 +65,64 @@ const getDateBefore = (days) => {
   return date;
 };
 
+// генерация данных поста
+const generateEntity = () => ({
+  "url": `https://picsum.photos/600/?random`,
+  "scale": getRandomNumber(MAX_SCALE),
+  "effect": getRandomArrayElemet(EFFECTS),
+  "hashtags": getRandomHashtags(),
+  "description": getRandomString(getRandomNumber(MAX_DESCRIPTION_LENGTH)),
+  "likes": getRandomNumber(MAX_LIKES),
+  "comments": getRandomStrings(getRandomNumber(MAX_COMMENTS_COUNT), MAX_COMMENT_LENGTH),
+  "date": getDateBefore(getRandomNumber(DATE_RANGE) - 1).getTime()
+});
+
+// генерации данных нескольких постов
+const generateEntities = (count) => {
+  let data = [];
+  for (let i = 0; i < count; i++) {
+    data.push(generateEntity());
+  }
+
+  return data;
+};
+
+// создание стрима на основе буфера данных
+const bufferToStream = (buffer) => {
+  const stream = new Duplex();
+  stream.push(buffer);
+  stream.push(null);
+  return stream;
+};
+
+// пагинация данных
+const getPaginatedData = async (cursor, skip = 0, limit = 50) => {
+  const data = await cursor.skip(skip).limit(limit).toArray();
+  return {
+    data,
+    pagination: {skip, limit}
+  };
+};
+
+// проверяет удовлетворяет ли объект фильтру
+const hasFilterValues = (obj, filter) => {
+  let ret = true;
+  for (let field in filter) {
+    if (!obj[field] || obj[field] !== filter[field]) {
+      ret = false;
+      break;
+    }
+  }
+  return ret;
+};
+
 module.exports = {
-  name: `entityGenerator`,
-  description: `Генерирует тестовые данные`,
-  generateEntity: () => ({
-    "url": `https://picsum.photos/600/?random`,
-    "scale": getRandomNumber(MAX_SCALE),
-    "effect": getRandomArrayElemet(EFFECTS),
-    "hashtags": getRandomHashtags(),
-    "description": getRandomString(getRandomNumber(MAX_DESCRIPTION_LENGTH)),
-    "likes": getRandomNumber(MAX_LIKES),
-    "comments": getRandomStrings(getRandomNumber(MAX_COMMENTS_COUNT), MAX_COMMENT_LENGTH),
-    "date": getDateBefore(getRandomNumber(DATE_RANGE) - 1).getTime()
-  }),
-  consts: {MAX_HASHTAG_COUNT, MAX_SCALE, MAX_DESCRIPTION_LENGTH, MAX_LIKES, MAX_COMMENT_LENGTH}
+  name: `utils`,
+  description: `функции утилиты`,
+  generateEntity,
+  generateEntities,
+  consts: {MAX_HASHTAG_COUNT, MAX_SCALE, MAX_DESCRIPTION_LENGTH, MAX_LIKES, MAX_COMMENT_LENGTH},
+  bufferToStream,
+  getPaginatedData,
+  hasFilterValues
 };

@@ -1,6 +1,9 @@
 const assert = require(`assert`);
 const request = require(`supertest`);
-const {app} = require(`../src/server`);
+const express = require(`express`);
+
+const {getPostsRouter} = require(`../src/posts/route`);
+const {mocPostsStore, mocImageStore} = require(`./mock-store`);
 
 const isValidPost = (post) => {
   return ![`url`, `scale`, `effect`, `hashtags`, `description`, `likes`, `comments`, `date`]
@@ -10,6 +13,9 @@ const isValidPost = (post) => {
 const isArrayOfVilidPosts = (posts) => {
   return !posts.some((post) => !isValidPost(post));
 };
+
+const app = express();
+app.use(`/api/posts`, getPostsRouter(mocPostsStore, mocImageStore));
 
 describe(`get api/posts?skip=0&limit=5`, () => {
   it(`should return paginated posts`, () => {
@@ -64,22 +70,16 @@ describe(`post api/posts`, () => {
 
     return request(app).post(path)
         .send(post)
-        .expect(200, post);
+        .expect(200);
   });
 
   it(`should consume multiform`, () => {
-    const post = {
-      scale: `100`,
-      effect: `none`,
-      description: `best cat`
-    };
-
     return request(app).post(path)
         .field(`scale`, `100`)
         .field(`effect`, `none`)
         .field(`description`, `best cat`)
         .attach(`filename`, `test/fixtures/1.jpg`)
-        .expect(200, post);
+        .expect(200);
   });
 
   it(`should return 400 on invalid data`, () => {

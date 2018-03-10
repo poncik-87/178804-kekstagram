@@ -1,5 +1,5 @@
 const assert = require(`assert`);
-const {generateEntity, consts} = require(`../src/entity-generator`);
+const {generateEntity, consts} = require(`../src/utils`);
 
 const MAX_HASHTAG_LENGTH = 20;
 

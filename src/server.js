@@ -1,13 +1,15 @@
 const express = require(`express`);
 
-const {postsRouter} = require(`./posts/route`);
+const {postsStore} = require(`./posts/store`);
+const {imageStore} = require(`./images/store`);
+const {getPostsRouter} = require(`./posts/route`);
 
 const host = `127.0.0.1`;
-const defaultPort = 3000;
+const defaultPort = 3001;
 
 const app = express();
 app.use(express.static(`static`));
-app.use(`/api/posts`, postsRouter);
+app.use(`/api/posts`, getPostsRouter(postsStore, imageStore));
 
 module.exports = {
   name: `server`,

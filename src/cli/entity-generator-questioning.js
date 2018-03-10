@@ -2,7 +2,7 @@ const readline = require(`readline`);
 const fs = require(`fs`);
 const promisify = require(`util`).promisify;
 
-const {generateEntity} = require(`../entity-generator`);
+const {generateEntities} = require(`../utils`);
 
 const writeFilePromise = promisify(fs.writeFile);
 
@@ -43,10 +43,7 @@ const processYesNoResponse = (answer, yesCallback, noCallback, otherCallback) =>
 
 // Генерирует данные и записывает их в файл
 const generateDataToFile = async (elementsCount, filePath) => {
-  let data = [];
-  for (let i = 0; i < elementsCount; i++) {
-    data.push(generateEntity());
-  }
+  const data = generateEntities(elementsCount);
 
   try {
     await writeFilePromise(filePath, JSON.stringify(data));
