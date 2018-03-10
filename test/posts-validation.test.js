@@ -1,5 +1,5 @@
 const {validate} = require(`../src/validation`);
-const {postsValidationSchema} = require(`../src/posts/validationSchema`);
+const {postsValidationSchema} = require(`../src/posts/validation-schema`);
 
 // выкидывает ошибку, если ошибка валидатора отличается от эталонной
 const errorMessageAssertion = (errorMessage, validationObject) => {

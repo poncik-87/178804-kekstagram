@@ -1,5 +1,7 @@
 const assert = require(`assert`);
-const {generateEntity, consts} = require(`../src/entity-generator`);
+
+const {generateEntity} = require(`../src/utils`);
+const {POST_LIMITATION} = require(`../src/consts`);
 
 const MAX_HASHTAG_LENGTH = 20;
 
@@ -41,8 +43,8 @@ describe(`Check generateEntity`, () => {
       assert.equal(typeof entity.scale, `number`);
     });
 
-    it(`Should be in range 0..${consts.MAX_SCALE}`, () => {
-      assert.ok(entity.scale >= 0 && entity.scale <= consts.MAX_SCALE);
+    it(`Should be in range 0..${POST_LIMITATION.MAX_SCALE}`, () => {
+      assert.ok(entity.scale >= 0 && entity.scale <= POST_LIMITATION.MAX_SCALE);
     });
 
     it(`Should be integer`, () => {
@@ -78,8 +80,8 @@ describe(`Check generateEntity`, () => {
       assert.ok(hasOnlyType(entity.hashtags, `string`));
     });
 
-    it(`Should contains <= ${consts.MAX_HASHTAG_COUNT} items`, () => {
-      assert.ok(entity.hashtags.length <= consts.MAX_HASHTAG_COUNT);
+    it(`Should contains <= ${POST_LIMITATION.MAX_HASHTAG_COUNT} items`, () => {
+      assert.ok(entity.hashtags.length <= POST_LIMITATION.MAX_HASHTAG_COUNT);
     });
 
     it(`Should contains strings starts with #, without spaces`, () => {
@@ -108,8 +110,8 @@ describe(`Check generateEntity`, () => {
       assert.equal(typeof entity.description, `string`);
     });
 
-    it(`Should be <= ${consts.MAX_DESCRIPTION_LENGTH} chars`, () => {
-      assert.ok(entity.description.length <= consts.MAX_DESCRIPTION_LENGTH);
+    it(`Should be <= ${POST_LIMITATION.MAX_DESCRIPTION_LENGTH} chars`, () => {
+      assert.ok(entity.description.length <= POST_LIMITATION.MAX_DESCRIPTION_LENGTH);
     });
 
     it(`Should be random`, () => {
@@ -125,8 +127,8 @@ describe(`Check generateEntity`, () => {
       assert.equal(typeof entity.likes, `number`);
     });
 
-    it(`Should be in range 0..${consts.MAX_LIKES}`, () => {
-      assert.ok(entity.likes >= 0 && entity.likes <= consts.MAX_LIKES);
+    it(`Should be in range 0..${POST_LIMITATION.MAX_LIKES}`, () => {
+      assert.ok(entity.likes >= 0 && entity.likes <= POST_LIMITATION.MAX_LIKES);
     });
 
     it(`Should be integer`, () => {
@@ -145,8 +147,8 @@ describe(`Check generateEntity`, () => {
       assert.ok(hasOnlyType(entity.comments, `string`));
     });
 
-    it(`Should contains strings <= ${consts.MAX_COMMENT_LENGTH} chars`, () => {
-      assert.ok(hasOnlyLimitedStrings(entity.comments, consts.MAX_COMMENT_LENGTH));
+    it(`Should contains strings <= ${POST_LIMITATION.MAX_COMMENT_LENGTH} chars`, () => {
+      assert.ok(hasOnlyLimitedStrings(entity.comments, POST_LIMITATION.MAX_COMMENT_LENGTH));
     });
 
     it(`Should be random`, () => {

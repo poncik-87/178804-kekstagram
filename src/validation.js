@@ -1,3 +1,5 @@
+const {ValidationError} = require(`./errors`);
+
 const validate = (data, validationSchema) => {
   const errors = [];
 
@@ -13,7 +15,7 @@ const validate = (data, validationSchema) => {
   }
 
   if (errors.length) {
-    throw new Error(errors.join(`\n`));
+    throw new ValidationError(errors.join(`\n`));
   }
 };
 

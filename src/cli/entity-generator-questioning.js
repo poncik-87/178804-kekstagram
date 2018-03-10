@@ -2,7 +2,7 @@ const readline = require(`readline`);
 const fs = require(`fs`);
 const promisify = require(`util`).promisify;
 
-const {generateEntity} = require(`../entity-generator`);
+const {generateEntities} = require(`../utils`);
 
 const writeFilePromise = promisify(fs.writeFile);
 
@@ -30,23 +30,20 @@ const getQuestion = (type) => {
 };
 
 // Обработка ответа "Да/Нет"
-const processYesNoResponse = (answer, yesCallback, noCallback, otherCallback) => {
+const processYesNoResponse = (answer, onYes, onNo, onOther) => {
   answer = answer.toLowerCase();
   if (answer === `y` || answer === `yes`) {
-    yesCallback();
+    onYes();
   } else if (answer === `n` || answer === `no`) {
-    noCallback();
+    onNo();
   } else {
-    otherCallback();
+    onOther();
   }
 };
 
 // Генерирует данные и записывает их в файл
 const generateDataToFile = async (elementsCount, filePath) => {
-  let data = [];
-  for (let i = 0; i < elementsCount; i++) {
-    data.push(generateEntity());
-  }
+  const data = generateEntities(elementsCount);
 
   try {
     await writeFilePromise(filePath, JSON.stringify(data));
