@@ -48,6 +48,8 @@ const generateDataToFile = async (elementsCount, filePath) => {
 
   try {
     await writeFilePromise(filePath, JSON.stringify(data));
+
+    logger.info(`generated posts is written to file`);
   } catch (err) {
     logger.error(`generateDataToFile fail to write to file`, {error: err});
   }

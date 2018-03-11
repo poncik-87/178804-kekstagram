@@ -16,6 +16,11 @@ class PostsStore {
     return collection.insertOne(post);
   }
 
+  async savePosts(posts) {
+    const collection = await this._getCollection();
+    return collection.insertMany(posts);
+  }
+
   async _getCollection() {
     if (this._postsCollection) {
       return this._postsCollection;

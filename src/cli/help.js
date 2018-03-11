@@ -3,6 +3,7 @@ const author = require(`./author`);
 const description = require(`./description`);
 const license = require(`./license`);
 const server = require(`./server`);
+const fillDb = require(`./fillDb`);
 
 const HELP_MODULE_NAME = `--help`;
 const HELP_MODULE_DESCRIPTION = `Показывает справку по программе`;
@@ -10,7 +11,7 @@ const HELP_MODULE_DESCRIPTION = `Показывает справку по про
 const getHelpMessageLine = (name, desc) =>
   `${name.gray}    - ${desc.green}`;
 
-const commands = [server, version, author, description, license];
+const commands = [server, fillDb, version, author, description, license];
 
 module.exports = {
   name: HELP_MODULE_NAME,

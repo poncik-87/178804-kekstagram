@@ -19,9 +19,11 @@ const app = express();
 app.use(`/api/posts`, getPostsRouter(mocPostsStore, mocImageStore));
 
 describe(`get api/posts?skip=0&limit=5`, () => {
+  const path = `/api/posts`;
+
   it(`should return paginated posts`, () => {
     request(app)
-        .get(`/api/posts`)
+        .get(path)
         .expect(HTTP_STATUS_CODES.OK)
         .expect(`Content-Type`, /json/)
         .end((err, res) => {
@@ -35,13 +37,21 @@ describe(`get api/posts?skip=0&limit=5`, () => {
           assert.ok(posts.length === 0 || isArrayOfVilidPosts(posts));
         });
   });
+
+  it(`should return ${HTTP_STATUS_CODES.WRONG_METHOD} error on wrong method`, () => {
+    return request(app)
+        .put(path)
+        .expect(HTTP_STATUS_CODES.WRONG_METHOD);
+  });
 });
 
 describe(`get api/posts/:date`, () => {
+  const date = new Date();
+  const path = `/api/posts/${date.getTime()}`;
+
   it(`should return empty object or post with same date`, () => {
-    const date = new Date();
     request(app)
-        .get(`/api/posts/${date.getTime()}`)
+        .get(path)
         .expect(HTTP_STATUS_CODES.OK)
         .expect(`Content-Type`, /json/)
         .end((err, res) => {
@@ -53,6 +63,12 @@ describe(`get api/posts/:date`, () => {
 
           assert.ok(!post || Object.keys(post).length === 0 || isValidPost(post));
         });
+  });
+
+  it(`should return ${HTTP_STATUS_CODES.WRONG_METHOD} error on wrong method`, () => {
+    return request(app)
+        .put(path)
+        .expect(HTTP_STATUS_CODES.WRONG_METHOD);
   });
 });
 
@@ -69,7 +85,8 @@ describe(`post api/posts`, () => {
       description: `best cat`
     };
 
-    return request(app).post(path)
+    return request(app)
+        .post(path)
         .send(post)
         .expect(HTTP_STATUS_CODES.OK);
   });
@@ -87,5 +104,10 @@ describe(`post api/posts`, () => {
     return request(app).post(path)
         .send({})
         .expect(HTTP_STATUS_CODES.VALIDATION_ERROR);
+  });
+  it(`should return ${HTTP_STATUS_CODES.WRONG_METHOD} error on wrong method`, () => {
+    return request(app)
+        .put(path)
+        .expect(HTTP_STATUS_CODES.WRONG_METHOD);
   });
 });

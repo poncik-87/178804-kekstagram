@@ -5,7 +5,7 @@ const bodyParser = require(`body-parser`);
 const {postsValidationSchema} = require(`./validation-schema`);
 const {validate} = require(`../validation`);
 const {getPaginatedData} = require(`../utils`);
-const {NotFoundError} = require(`../errors`);
+const {NotFoundError, WrongMethodError} = require(`../errors`);
 const {bufferToStream} = require(`../utils`);
 const {HTTP_STATUS_CODES} = require(`../consts`);
 const {logger} = require(`../logger`);
@@ -39,44 +39,6 @@ postsRouter.get(`/`, async (req, res, next) => {
   }
 });
 
-// возвращает пост по дате
-postsRouter.get(`/:date`, async (req, res, next) => {
-  try {
-    const post = await postsRouter.postsStore.getPost({date: Number(req.params.date)});
-
-    if (!post) {
-      const date = new Date(Number(req.params.date));
-      throw new NotFoundError(`Post with date ${date} not found`);
-    }
-
-    logger.info(`successfully process GET post by date`);
-
-    res.send(post);
-  } catch (err) {
-    err.request = `GET posts/:date`;
-    next(err);
-  }
-});
-
-// возвращает картинку поста по дате
-postsRouter.get(`/:date/image`, async (req, res, next) => {
-  try {
-    const filename = `api/posts/${req.params.date}/image`;
-    const fileStream = await postsRouter.imageStore.getImage(filename);
-
-    if (!fileStream) {
-      throw new NotFoundError(`Post with date ${new Date(req.params.date)} not found`);
-    }
-
-    logger.info(`successfully process GET post image`);
-
-    fileStream.pipe(res);
-  } catch (err) {
-    err.request = `GET posts/:date/image`;
-    next(err);
-  }
-});
-
 // обработка post запроса с данными поста
 postsRouter.post(`/`, bodyParser.json(), upload.single(`filename`), async (req, res, next) => {
   try {
@@ -101,15 +63,78 @@ postsRouter.post(`/`, bodyParser.json(), upload.single(`filename`), async (req, 
   }
 });
 
+// обработка неподдерживаемых http методов
+postsRouter.all(`/`, () => {
+  throw new WrongMethodError();
+});
+
+// возвращает пост по дате
+postsRouter.get(`/:date`, async (req, res, next) => {
+  try {
+    const post = await postsRouter.postsStore.getPost({date: Number(req.params.date)});
+
+    if (!post) {
+      const date = new Date(Number(req.params.date));
+      throw new NotFoundError(`Post with date ${date} not found`);
+    }
+
+    logger.info(`successfully process GET post by date`);
+
+    res.send(post);
+  } catch (err) {
+    err.request = `GET posts/:date`;
+    next(err);
+  }
+});
+
+// обработка неподдерживаемых http методов
+postsRouter.all(`/:date`, () => {
+  throw new WrongMethodError();
+});
+
+// возвращает картинку поста по дате
+postsRouter.get(`/:date/image`, async (req, res, next) => {
+  try {
+    const filename = `api/posts/${req.params.date}/image`;
+    const fileStream = await postsRouter.imageStore.getImage(filename);
+
+    if (!fileStream) {
+      throw new NotFoundError(`Post with date ${new Date(req.params.date)} not found`);
+    }
+
+    logger.info(`successfully process GET post image`);
+
+    fileStream.pipe(res);
+  } catch (err) {
+    err.request = `GET posts/:date/image`;
+    next(err);
+  }
+});
+
+// обработка неподдерживаемых http методов
+postsRouter.all(`/:date/image`, () => {
+  throw new WrongMethodError();
+});
+
 postsRouter.use((err, req, res, next) => {
   if (err.code) {
     logger.info(`successfully process wrong ${err.request} request`, {error: err});
 
-    res.status(err.code).send(err.message);
+    const errorObj = {
+      error: err.errorType,
+      errorMessage: err.message
+    };
+
+    res.status(err.code).send(errorObj);
   } else {
     logger.error(`failed to process ${err.request} request`, {error: err});
 
-    res.status(HTTP_STATUS_CODES.SERVER_ERROR).send(`server has some troubles`);
+    const errorObj = {
+      error: `Internal Error`,
+      errorMessage: `Server has fallen into unrecoverable problem.`
+    };
+
+    res.status(HTTP_STATUS_CODES.SERVER_ERROR).send(errorObj);
   }
 
   next();

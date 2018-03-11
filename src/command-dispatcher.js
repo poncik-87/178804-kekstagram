@@ -8,8 +8,9 @@ const license = require(`./cli/license`);
 const unknownParameter = require(`./cli/unknown-parameter`);
 const emptyParameters = require(`./cli/empty-parameters`);
 const server = require(`./cli/server`);
+const fillDb = require(`./cli/fillDb`);
 
-const commands = [server, version, help, author, description, license];
+const commands = [server, fillDb, version, help, author, description, license];
 
 module.exports = {
   name: `command-dispatcher`,
